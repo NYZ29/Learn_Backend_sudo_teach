@@ -1,18 +1,19 @@
-class Example {
-    static void example() {
-        int x = 10;
-        if (x > 5) {
-            System.out.println("Больше пяти");
-            if (x > 8) {
-                System.out.println("Больше восьми");
-            }
-        }
+class Comments {
+    /// коммента
+    static void comments() {
+        // в отдельную переменную
+        String text = "Java – это круто";
+        /*
+        теперь вывод
+         */
+        System.out.println(text);
     }
 }
 
 
 public class Main {
+    /// @param args
     public static void main(String[] args) {
-        Example.example();
+        Comments.comments();
     }
 }
