@@ -1,70 +1,153 @@
-class IntegerTypesOverview {
-    static void integerTypesOverview() {
-        byte smallNumber = 42;
-        short mediumNumber = 1_000;
-        int bigNumber = 1_000_000;
-        long hugeNumber = 1_000_000_000L;
+import java.math.BigDecimal;
 
-        System.out.println("=== Все типы ===");
-        System.out.println("byte: " + smallNumber + " (от -128 до 127)");
-        System.out.println("short: " + mediumNumber + " (от -32768 до 32767)");
-        System.out.println("int: " + bigNumber + " (от -2.1 млрд до 2.1 млрд)");
-        System.out.println("long: " + hugeNumber + " (огромный диапазон)");
 
-        System.out.println();
-        System.out.println("=== Системы счисления ===");
-        int decimal = 255;
-        int hex = 0xFF;
-        int octal = 0377;
-        int binary = 0b1111_1111;
+class FloatExample {
+    static void floatExample() {
+        float price = 9.99F;
+        float temperature = -36.6F;
+        float pi = 3.14159F;
+        float gravity = 9.8F;
+        float distance = 150_000_000F;
 
-        System.out.println("Десятичная: " + decimal);
-        System.out.println("Шестнадцатеричная: " + hex);
-        System.out.println("Восьмеричная: " + octal);
-        System.out.println("Двоичная: " + binary);
-
-        System.out.println();
-        System.out.println("=== Разделители разрядов ===");
-        int withSeparator = 1_234_567_890;
-        long bigWithSeparator = 9_223_372_036_854_775_807L;
-        System.out.println("С разделителем: " + withSeparator);
-        System.out.println("Большое число: " + bigWithSeparator);
-
-        System.out.println();
-        System.out.println("=== Автоматическое расширение ===");
-        byte b = 10;
-        short s = b;
-        int i = s;
-        long l = i;
-        System.out.println("byte → short → int → long: " + l);
-
-        System.out.println();
-        System.out.println("=== Переполнение ===");
-        int max = Integer.MAX_VALUE;
-        System.out.println("MAX_VALUE: " + max);
-        System.out.println("MAX_VALUE + 1: " + (max + 1));
+        System.out.println("Цена: " + price);
+        System.out.println("Температура: " + temperature);
+        System.out.println("Число Пи: " + pi);
+        System.out.println("Гравитация: " + gravity);
+        System.out.println("Расстояние от Земли до Солнца (км): " + distance);
     }
 }
 
 
-class WrapperExample {
-    static void wrapperExample() {
-        System.out.println("Максимум int: " + Integer.MAX_VALUE);
-        System.out.println("Минимум int: " + Integer.MIN_VALUE);
-        System.out.println("Максимум long: " + Long.MAX_VALUE);
-        System.out.println("Минимум long: " + Long.MIN_VALUE);
+class DoubleExample {
+    static void doubleExample() {
+        double pi = 3.14159265358973;
+        double e = 2.718281828459045;
+        double speedOfLight = 299_792_458.0;
+        double avogadro = 6.0221407e23;
 
-        int parsed = Integer.parseInt("12345");
-        System.out.println("Из строки: " + parsed);
+        System.out.println("Число Пи: " + pi);
+        System.out.println("Число Эйлера: " + e);
+        System.out.println("Скорость света (м/с): " + speedOfLight);
+        System.out.println("Число Авогадро: " + avogadro);
+    }
+}
 
-        String hexString = Integer.toHexString(255);
-        System.out.println("255 в hex: " + hexString);
 
-        String binaryString = Integer.toBinaryString(42);
-        System.out.println("42 в двоичной: " + binaryString);
+class ScientificNotation {
+    static void scientificNotation() {
+        double lightYear = 9.461e15;
+        double atomSize = 1.0e-10;
+        double electronMass = 9.109e-31;
+        double sunMass = 1.989e30;
 
-        int compared = Integer.compare(10, 20);
-        System.out.println("Сравнение 10 и 20: " + compared);
+        System.out.println("Световой год (м): " + lightYear);
+        System.out.println("Размер атома (м): " + atomSize);
+        System.out.println("Масса электрона (кг): " + electronMass);
+        System.out.println("Масса Солнца (кг): " + sunMass);
+    }
+}
+
+
+class PrecisionProblem {
+    static void precisionProblem() {
+        double a = 0.1;
+        double b = 0.2;
+        double sum = a + b;
+
+        System.out.println("0.1 + 0.2 = " + sum);
+        System.out.println("Равно ли 0.3? " + (sum == 0.3));
+
+        float f1 = 0.1F;
+        float f2 = 0.2F;
+        float fsum = f1 + f2;
+
+        System.out.println("float: 0.1 + 0.2 = " + fsum);
+    }
+}
+
+
+class SafeComparison {
+    static void safeComparison() {
+        double a = 0.1 + 0.2;
+        double b = 0.3;
+        double epsilon = 1e-10;
+
+        boolean isEqual = Math.abs(a - b) < epsilon;
+        System.out.println("Безопасное сравнение: " + isEqual);
+
+        System.out.println("Небезопасное сравнение: " + (a == b));
+    }
+}
+
+
+class DoubleConstants {
+    static void doubleConstants() {
+        System.out.println("MAX_VALUE: " + Double.MAX_VALUE);
+        System.out.println("MIN_VALUE: " + Double.MIN_VALUE);
+        System.out.println("POSITIVE_INFINITY: " + Double.POSITIVE_INFINITY);
+        System.out.println("NEGATIVE_INFINITY: " + Double.NEGATIVE_INFINITY);
+        System.out.println("NaN: " + Double.NaN);
+
+        System.out.println("Epsilon: " + Double.MIN_VALUE);
+        System.out.println("True epsilon: " + Math.ulp(1.0));
+    }
+}
+
+
+class BigDecimalExample {
+    static void bigDecimalExample() {
+        BigDecimal a = new BigDecimal("0.1");
+        BigDecimal b = new BigDecimal("0.2");
+        BigDecimal sum = a.add(b);
+        BigDecimal expected = new BigDecimal("0.3");
+
+        System.out.println("BigDecimal: 0.1 + 0.2 = " + sum);
+        System.out.println("Равно ли 0.3? " + sum.equals(expected));
+
+        System.out.println();
+        System.out.println("double: 0.1 + 0.2 = " + (0.1 + 0.2));
+        System.out.println("Равно ли 0.3? " + ((0.1 + 0.2) == 0.3));
+
+        BigDecimal price1 = new BigDecimal("19.99");
+        BigDecimal price2 = new BigDecimal("29.99");
+        BigDecimal total = price1.add(price2);
+        System.out.println();
+        System.out.println("Итого: " + total);
+    }
+}
+
+
+class BigDecimalCreation {
+    static void bigDecimalCreation() {
+        BigDecimal good = new BigDecimal("0.1");
+        BigDecimal bad = new BigDecimal(0.1);
+
+        System.out.println("Из строки: " + good);
+        System.out.println("Из double: " + bad);
+
+        BigDecimal precise = BigDecimal.valueOf(0.1);
+        System.out.println("valueof: " + precise);
+    }
+}
+
+
+class TypeConversion {
+    static void typeConversion() {
+        int i = 100;
+        double d = i;
+        System.out.println("int → double: " + d);
+
+        double pi = 3.14159;
+        int truncated = (int) pi;
+        System.out.println("double → int (сужение): " + truncated);
+
+        float f = 3.14F;
+        double promoted = f;
+        System.out.println("float → double: " + promoted);
+
+        long big = 1_000_000L;
+        float fromLong = big;
+        System.out.println("long → float: " + fromLong);
     }
 }
 
@@ -72,9 +155,30 @@ class WrapperExample {
 public class Main {
     public static void main(String[] args) {
         System.out.println();
-        IntegerTypesOverview.integerTypesOverview();
+        FloatExample.floatExample();
 
         System.out.println();
-        WrapperExample.wrapperExample();
+        DoubleExample.doubleExample();
+
+        System.out.println();
+        ScientificNotation.scientificNotation();
+
+        System.out.println();
+        PrecisionProblem.precisionProblem();
+
+        System.out.println();
+        SafeComparison.safeComparison();
+
+        System.out.println();
+        DoubleConstants.doubleConstants();
+
+        System.out.println();
+        BigDecimalExample.bigDecimalExample();
+
+        System.out.println();
+        BigDecimalCreation.bigDecimalCreation();
+
+        System.out.println();
+        TypeConversion.typeConversion();
     }
 }
