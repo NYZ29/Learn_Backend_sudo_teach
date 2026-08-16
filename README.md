@@ -1,1 +1,1 @@
-Module 1 is completed! ^_^
+Module 1 is completed! ^_^ Module 2 is completed :-)
