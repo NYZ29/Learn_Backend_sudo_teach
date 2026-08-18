@@ -1,68 +1,98 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 
-class SeaBattle {
-    /// Поле — это квадрат 10×10. Используем символы:
-    ///
-    /// '~' — вода (пустая клетка)
-    /// 'S' — корабль
-    /// 'X' — попадание
-    /// 'O' — промах
-    static void paintingBattlefield(char[][] field) {
-        for (int row = 0; row < field.length; row++) {
-            for (int col = 0; col < field[0].length; col++) {
-                field[row][col] = '~';
+class Practice {
+    static void rotateMatrix90DegreesClockwise(int @NotNull [][] matrix) {
+        int n = matrix.length;
+        int[][] rotated = new int[n][n];
+
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                rotated[col][n - 1 - row] = matrix[row][col];
             }
         }
+        System.out.println("Исходная: " + Arrays.deepToString(matrix));
+        System.out.println("Повёрнутая: " + Arrays.deepToString(rotated));
     }
 
-    static void placeShip(char[][] field, int row, int col, int size, boolean horizontal) {
-        for (int i = 0; i < size; i++) {
-            if (horizontal) {
-                field[row][col + i] = 'S';
-            } else {
-                field[row + i][col] = 'S';
-            }
+    static void findSumOnDiags(int @NotNull [][] matrix) {
+        int mainDiagSum = 0;
+        int antiDiagSum = 0;
+
+        for (int i = 0; i < matrix.length; i++) {
+            mainDiagSum += matrix[i][i];
+            antiDiagSum += matrix[i][matrix.length - 1 - i];
         }
+
+        System.out.println("Главная диагональ: " + mainDiagSum);
+        System.out.println("Побочная диагональ: " + antiDiagSum);
     }
 
-    static void showField(char[][] field) {
-        System.out.print("  ");
-        for (int col = 0; col < field[0].length; col++) {
-            System.out.print(col + " ");
-        }
-        System.out.println();
+    static void findCountOfOccurrences(int @NotNull [][] matrix, int target) {
+        int count = 0;
 
-        for (int row = 0; row < field.length; row++) {
-            System.out.print((char) ('A' + row) + " ");
-            for (int col = 0; col < field[row].length; col++) {
-                System.out.print(field[row][col] + " ");
-            }
-            System.out.println();
-        }
-    }
-
-    static String shoot(char[][] field, int row, int col) {
-        if (field[row][col] == 'S') {
-            field[row][col] = 'X';
-            return "Попадание!";
-        } else if (field[row][col] == '~') {
-            field[row][col] = 'O';
-            return "Промах!";
-        } else {
-            return "Вы уже стреляли в эту клетку!";
-        }
-    }
-
-    static boolean areAllShipsDestroyed(char[][] field) {
-        for (int row = 0; row < field.length; row++) {
-            for (int col = 0; col < field[row].length; col++) {
-                if (field[row][col] == 'S') {
-                    return false;
+        for (int[] row : matrix) {
+            for (int val : row) {
+                if (val == target) {
+                    count++;
                 }
             }
         }
-        return true;
+
+        System.out.println("Число " + target + " встречается " + count + " раз");
+    }
+
+    static void createIdentityMatrix(int n) {
+        int[][] identity = new int[n][n];
+
+        for (int i = 0; i < n; i++) {
+            identity[i][i] = 1;
+        }
+
+        System.out.println(Arrays.deepToString(identity));
+    }
+
+    static void findWithMaxSum(int @NotNull [][] matrix) {
+        int maxSum = 0;
+        int maxRowIndex = 0;
+
+        for (int row = 0; row < matrix.length; row++) {
+            int sum = 0;
+            for (int val : matrix[row]) {
+                sum += val;
+            }
+            if (sum > maxSum) {
+                maxSum = sum;
+                maxRowIndex = row;
+            }
+        }
+
+        System.out.println("Строка с индексом " + maxRowIndex + " имеет наибольшую сумму: " + maxSum);
+    }
+
+    static void dimension3D(int @NotNull [][][] figure) {
+        int length = figure.length;
+        int width = figure[0].length;
+        int height = figure[0][0].length;
+
+        if (length > 0 && width > 0 && height > 0) {
+            figure[0][0][0] = 1;
+            if (length > 1 && width > 2 && height > 3) {
+                figure[1][2][3] = 42;
+                if (length > 2 && width > 3 && height > 4) {
+                    figure[2][3][4] = 100;
+                }
+            }
+        }
+
+        System.out.println("Длина, ширина и высота соответственно: " + length + ", " + width + ", " + height);
+        System.out.println(Arrays.deepToString(figure));
+    }
+
+    static void matrixMultiplication(int @NotNull [][] matrix1, int @NotNull [][] matrix2) {
+        
     }
 }
 
@@ -71,42 +101,39 @@ public class Main {
     public static void main(String[] args) {
         System.out.println();
 
-        char[][] field = new char[10][10];
-        SeaBattle.paintingBattlefield(field);
-
-        SeaBattle.placeShip(field, 0, 0, 3, true);
-        SeaBattle.placeShip(field, 2, 5, 2, false);
-        SeaBattle.placeShip(field, 5, 1, 4, true);
-
-        SeaBattle.showField(field);
+        int[][] matrix = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        };
+        Practice.rotateMatrix90DegreesClockwise(matrix);
         System.out.println();
 
-        System.out.println(SeaBattle.shoot(field, 0, 0));
-        SeaBattle.showField(field);
+        Practice.findSumOnDiags(matrix);
         System.out.println();
 
-        System.out.println(SeaBattle.shoot(field, 1, 1));
-        SeaBattle.showField(field);
+        int[][] matrix1 = {
+                {1, 2, 3, 2},
+                {4, 2, 6, 2},
+                {7, 8, 2, 10}
+        };
+        int target = 2;
+        Practice.findCountOfOccurrences(matrix1, target);
         System.out.println();
 
-        System.out.println(SeaBattle.shoot(field, 0, 0));
-        SeaBattle.showField(field);
+        int n = 5;
+        Practice.createIdentityMatrix(n);
         System.out.println();
 
-        System.out.println("Все корабли потоплены: " + SeaBattle.areAllShipsDestroyed(field));
+        int[][] table = {
+                {10, 20, 30},
+                {50, 5, 10},
+                {25, 25, 25}
+        };
+        Practice.findWithMaxSum(table);
         System.out.println();
 
-        SeaBattle.placeShip(field, 5, 1, 4, true);
-        for (int j = 1; j <= 4; j++) {
-            field[5][j] = 'X';
-        }
-        for (int j = 1; j <= 2; j++) {
-            field[0][j] = 'X';
-        }
-        for (int i = 2; i <= 3; i++) {
-            field[i][5] = 'X';
-        }
-        SeaBattle.showField(field);
-        System.out.println("Все корабли потоплены: " + SeaBattle.areAllShipsDestroyed(field));
+        int[][][] parallelepiped = new int[3][4][5];
+        Practice.dimension3D(parallelepiped);
     }
 }
