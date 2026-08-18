@@ -1,5 +1,4 @@
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -103,44 +102,93 @@ class Practice {
         System.out.println(Arrays.deepToString(figure));
     }
 
-    /// @param matrix1
-    /// @param matrix2
-    /// @return
-    static int @Nullable [][] matrixMultiplication(int @NotNull [][] matrix1, int @NotNull [][] matrix2) {
-        int len1 = matrix1.length;
-        int wid1 = matrix1[0].length;
-        int len2 = matrix2.length;
-        int wid2 = matrix2[0].length;
-
-        if (wid1 != len2) {
-            int[][] m3 = {{0}};
-            return m3;
+    private static void checkRectangular(
+            int[][] matrix,
+            String matrixName
+    ) {
+        if (matrix == null) {
+            throw new IllegalArgumentException(
+                    matrixName + " не должна быть null"
+            );
         }
 
-        int[][] matrix3 = new int[len1][wid2];
+        if (matrix.length == 0) {
+            throw new IllegalArgumentException(
+                    matrixName + " не должна быть пустой"
+            );
+        }
 
-        for (int i = 0; i < len1; i++) {
-            for (int j = 0; j < wid2; j++) {
-                for (int k = 0; k < wid1; k++) {
-                    matrix3[i][j] += matrix1[i][k] * matrix2[k][j];
+        if (matrix[0] == null || matrix[0].length == 0) {
+            throw new IllegalArgumentException(
+                    matrixName + " должна иметь хотя бы один столбец"
+            );
+        }
+
+        int columns = matrix[0].length;
+
+        for (int i = 0; i < matrix.length; i++) {
+            if (matrix[i] == null || matrix[i].length != columns) {
+                throw new IllegalArgumentException(
+                        matrixName + " должна быть прямоугольной"
+                );
+            }
+        }
+    }
+
+    static int[][] matrixMultiplication(
+            int @NotNull [][] matrix1,
+            int @NotNull [][] matrix2
+    ) {
+        checkRectangular(matrix1, "matrix1");
+        checkRectangular(matrix2, "matrix2");
+
+        int rowsA = matrix1.length;
+        int colsA = matrix1[0].length;
+        int rowsB = matrix2.length;
+        int colsB = matrix2[0].length;
+
+        if (colsA != rowsB) {
+            throw new IllegalArgumentException(
+                    "Несовместимые размеры матриц: " +
+                            rowsA + "×" + colsA + " и " +
+                            rowsB + "×" + colsB
+            );
+        }
+
+        int[][] result = new int[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int k = 0; k < colsA; k++) {
+                for (int j = 0; j < colsB; j++) {
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
                 }
             }
         }
 
-        return matrix3;
+        return result;
     }
 
-    /// @param matrix1
-    /// @param matrix2
-    static void showResultMatrix(int @NotNull [][] matrix1, int @NotNull [][] matrix2) {
-        int[][] matrix3 = matrixMultiplication(matrix1, matrix2);
-        if (matrix1[0].length != matrix2.length) {
-            System.out.println("Невозможно умножить! Кол-во столбцов матрицы1 != кол-во строк матрицы2 (Длина строки матрицы1 != длина столбца матрицы2)");
-            return;
+    static void showResultMatrix(
+            int @NotNull [][] matrix1,
+            int @NotNull [][] matrix2
+    ) {
+        try {
+            int[][] result = matrixMultiplication(matrix1, matrix2);
+
+            System.out.println(
+                    "M1 (" + matrix1.length + "×" + matrix1[0].length + "): " + Arrays.deepToString(matrix1)
+            );
+
+            System.out.println(
+                    "M2 (" + matrix2.length + "×" + matrix2[0].length + "): " + Arrays.deepToString(matrix2)
+            );
+
+            System.out.println(
+                    "M1×M2 (" + result.length + "×" + result[0].length + "): " + Arrays.deepToString(result)
+            );
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
         }
-        System.out.println("M1 (" + matrix1.length + "×" + matrix1[0].length + "): " + Arrays.deepToString(matrix1));
-        System.out.println("M2 (" + matrix2.length + "×" + matrix2[0].length + "): " + Arrays.deepToString(matrix2));
-        System.out.println("M1×M2 (" + matrix3.length + "×" + matrix3[0].length + "): " + Arrays.deepToString(matrix3));
     }
 }
 
