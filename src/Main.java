@@ -108,16 +108,20 @@ class MatrixPractice {
         }
     }
 
-    static void lightBFS(int @NotNull [][] maze) {
-        int startRow = 1, startCol = 1;
-        int endRow = 3, endCol = 3;
-
+    static void lightBFS(
+            int @NotNull [][] maze,
+            int startRow,
+            int startCol,
+            int endRow,
+            int endCol
+    ) {
         int[][] visited = new int[maze.length][maze[0].length];
 
         boolean found = findPath(maze, visited, startRow, startCol, endRow, endCol);
 
         if (found) {
             System.out.println("Путь найден!");
+            visited[endRow][endCol] = 1;
             for (int[] row : visited) {
                 System.out.println(Arrays.toString(row));
             }
@@ -196,7 +200,15 @@ public class Main {
                 {1, 0, 0, 0, 1},
                 {1, 1, 1, 1, 1}
         };
+        int startRow1 = 1, startCol1 = 1;
+        int endRow1 = 3, endCol1 = 3;
         MatrixPractice.labyrinth(maze1);
-        MatrixPractice.lightBFS(maze1);
+        MatrixPractice.lightBFS(maze1, startRow1, startCol1, endRow1, endCol1);
+        System.out.println();
+
+        int startRow = 1, startCol = 5;
+        int endRow = 1, endCol = 1;
+        MatrixPractice.labyrinth(maze);
+        MatrixPractice.lightBFS(maze, startRow, startCol, endRow, endCol);
     }
 }
