@@ -3,192 +3,158 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 
-class Practice {
-    /// @param matrix
-    static void rotateMatrix90DegreesClockwise(int @NotNull [][] matrix) {
-        int n = matrix.length;
-        int[][] rotated = new int[n][n];
-
-        for (int row = 0; row < n; row++) {
-            for (int col = 0; col < n; col++) {
-                rotated[col][n - 1 - row] = matrix[row][col];
+class DataVisualisation {
+    static void histogram(int @NotNull [] data) {
+        for (int i = 0; i < data.length; i++) {
+            System.out.printf("Позиция %d:", i);
+            for (int j = 0; j < data[i]; j++) {
+                System.out.print("█");
             }
+            System.out.println(" (" + data[i] + ")");
         }
-        System.out.println("Исходная: " + Arrays.deepToString(matrix));
-        System.out.println("Повёрнутая: " + Arrays.deepToString(rotated));
     }
 
-    /// @param matrix
-    static void findSumOnDiags(int @NotNull [][] matrix) {
-        int mainDiagSum = 0;
-        int antiDiagSum = 0;
-
-        for (int i = 0; i < matrix.length; i++) {
-            mainDiagSum += matrix[i][i];
-            antiDiagSum += matrix[i][matrix.length - 1 - i];
-        }
-
-        System.out.println("Главная диагональ: " + mainDiagSum);
-        System.out.println("Побочная диагональ: " + antiDiagSum);
-    }
-
-    /// @param matrix
-    /// @param target
-    static void findCountOfOccurrences(int @NotNull [][] matrix, int target) {
-        int count = 0;
-
-        for (int[] row : matrix) {
-            for (int val : row) {
-                if (val == target) {
-                    count++;
-                }
-            }
-        }
-
-        System.out.println("Число " + target + " встречается " + count + " раз");
-    }
-
-    /// @param n
-    static void createIdentityMatrix(int n) {
-        if (n <= 0) {
-            System.out.println("Не существует матрицы с такой размерностью");
-            return;
-        }
-        int[][] identity = new int[n][n];
+    static void multiplicationTable(int n) {
+        int[][] table = new int[n][n];
 
         for (int i = 0; i < n; i++) {
-            identity[i][i] = 1;
-        }
-
-        System.out.println(Arrays.deepToString(identity));
-    }
-
-    /// @param matrix
-    static void findWithMaxSum(int @NotNull [][] matrix) {
-        int maxSum = 0;
-        int maxRowIndex = 0;
-
-        for (int row = 0; row < matrix.length; row++) {
-            int sum = 0;
-            for (int val : matrix[row]) {
-                sum += val;
-            }
-            if (sum > maxSum) {
-                maxSum = sum;
-                maxRowIndex = row;
+            for (int j = 0; j < n; j++) {
+                table[i][j] = (i + 1) * (j + 1);
             }
         }
 
-        System.out.println("Строка с индексом " + maxRowIndex + " имеет наибольшую сумму: " + maxSum);
+        System.out.print("    ");
+        for (int j = 1; j <= n; j++) {
+            System.out.printf("%4d", j);
+        }
+        System.out.println();
+
+        for (int i = 0; i < n; i++) {
+            System.out.printf("%2d |", i + 1);
+            for (int j = 0; j < n; j++) {
+                System.out.printf("%4d", table[i][j]);
+            }
+            System.out.println();
+        }
     }
 
-    /// @param figure
-    static void dimension3D(int @NotNull [][][] figure) {
-        int length = figure.length;
-        int width = figure[0].length;
-        int height = figure[0][0].length;
+    static void pairwiseDistanceMatrix() {
+        String[] cities = {"Москва", "СПБ", "Новосибирск", "Екатеринбург"};
+        int[][] distances = {
+                {0, 650, 3350, 1770},
+                {650, 0, 3500, 2100},
+                {3350, 3500, 0, 1800},
+                {1770, 2100, 1800, 0}
+        };
 
-        if (length > 0 && width > 0 && height > 0) {
-            figure[0][0][0] = 1;
-            if (length > 1 && width > 2 && height > 3) {
-                figure[1][2][3] = 42;
-                if (length > 2 && width > 3 && height > 4) {
-                    figure[2][3][4] = 100;
+        System.out.println("Матрица расстояний (км):");
+        System.out.print("          ");
+        for (String city : cities) {
+            System.out.printf("%14s", city);
+        }
+        System.out.println();
+
+        for (int i = 0; i < cities.length; i++) {
+            System.out.printf("%12s", cities[i]);
+            for (int j = 0; j < cities.length; j++) {
+                System.out.printf("%13d", distances[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    static void gradeHeatMap() {
+        String[] students = {"Анна", "Борис", "Виктор", "Галина"};
+        String[] subjects = {"Математика", "Физика", "Информатика"};
+        int[][] grades = {
+                {5, 4, 5},
+                {4, 5, 4},
+                {3, 4, 5},
+                {5, 5, 5}
+        };
+
+        System.out.print("          ");
+        for (String sub : subjects) {
+            System.out.printf("%12s", sub);
+        }
+        System.out.println();
+
+        for (int i = 0; i < students.length; i++) {
+            System.out.printf("%10s", students[i]);
+            for (int j = 0; j < subjects.length; j++) {
+                String bar = "";
+                for (int k = 0; k < grades[i][j]; k++) {
+                    bar += "●";
+                }
+                System.out.printf("%12s", bar);
+            }
+            System.out.println();
+        }
+    }
+}
+
+
+class MatrixPractice {
+    static void labyrinth(int @NotNull [][] maze) {
+        for (int row = 0; row < maze.length; row++) {
+            for (int col = 0; col < maze[row].length; col++) {
+                if (maze[row][col] == 1) {
+                    System.out.print("██");
+                } else {
+                    System.out.print("  ");
                 }
             }
+            System.out.println();
         }
-
-        System.out.println("Длина, ширина и высота соответственно: " + length + ", " + width + ", " + height);
-        System.out.println(Arrays.deepToString(figure));
     }
 
-    private static void checkRectangular(
-            int[][] matrix,
-            String matrixName
-    ) {
-        if (matrix == null) {
-            throw new IllegalArgumentException(
-                    matrixName + " не должна быть null"
-            );
-        }
+    static void lightBFS(int @NotNull [][] maze) {
+        int startRow = 1, startCol = 1;
+        int endRow = 3, endCol = 3;
 
-        if (matrix.length == 0) {
-            throw new IllegalArgumentException(
-                    matrixName + " не должна быть пустой"
-            );
-        }
+        int[][] visited = new int[maze.length][maze[0].length];
 
-        if (matrix[0] == null || matrix[0].length == 0) {
-            throw new IllegalArgumentException(
-                    matrixName + " должна иметь хотя бы один столбец"
-            );
-        }
+        boolean found = findPath(maze, visited, startRow, startCol, endRow, endCol);
 
-        int columns = matrix[0].length;
-
-        for (int i = 0; i < matrix.length; i++) {
-            if (matrix[i] == null || matrix[i].length != columns) {
-                throw new IllegalArgumentException(
-                        matrixName + " должна быть прямоугольной"
-                );
+        if (found) {
+            System.out.println("Путь найден!");
+            for (int[] row : visited) {
+                System.out.println(Arrays.toString(row));
             }
+        } else {
+            System.out.println("Путь не найден!");
         }
     }
 
-    static int[][] matrixMultiplication(
-            int @NotNull [][] matrix1,
-            int @NotNull [][] matrix2
+    static boolean findPath(
+            int @NotNull [][] maze,
+            int @NotNull [][] visited,
+            int row,
+            int col,
+            int endRow,
+            int endCol
     ) {
-        checkRectangular(matrix1, "matrix1");
-        checkRectangular(matrix2, "matrix2");
-
-        int rowsA = matrix1.length;
-        int colsA = matrix1[0].length;
-        int rowsB = matrix2.length;
-        int colsB = matrix2[0].length;
-
-        if (colsA != rowsB) {
-            throw new IllegalArgumentException(
-                    "Несовместимые размеры матриц: " +
-                            rowsA + "×" + colsA + " и " +
-                            rowsB + "×" + colsB
-            );
+        if (row == endRow && col == endCol) {
+            return true;
         }
 
-        int[][] result = new int[rowsA][colsB];
+        // Если в процессе поиска мы вышли за границы, то возвращаем false
+        if (row < 0 || row >= maze.length || col < 0 || col >= maze[0].length) return false;
+        // Если точка, в которой мы сейчас находимся, является стеной или мы её уже посещали, то возвращаем false
+        if (maze[row][col] == 1 || visited[row][col] == 1) return false;
 
-        for (int i = 0; i < rowsA; i++) {
-            for (int k = 0; k < colsA; k++) {
-                for (int j = 0; j < colsB; j++) {
-                    result[i][j] += matrix1[i][k] * matrix2[k][j];
-                }
-            }
-        }
+        // Если дошли до этого момента, значит, все предыдущие условия не выполнились, значит, временно "ставим" стену, чтобы не было бесконечной проверки 2 соседних клеток
+        visited[row][col] = 1;
 
-        return result;
-    }
+        // Рекурсивный перебор соседних точек. Все проверки условий выше - проверка на базовый случай
+        if (findPath(maze, visited, row + 1, col, endRow, endCol)) return true;
+        if (findPath(maze, visited, row, col + 1, endRow, endCol)) return true;
+        if (findPath(maze, visited, row - 1, col, endRow, endCol)) return true;
+        if (findPath(maze, visited, row, col - 1, endRow, endCol)) return true;
 
-    static void showResultMatrix(
-            int @NotNull [][] matrix1,
-            int @NotNull [][] matrix2
-    ) {
-        try {
-            int[][] result = matrixMultiplication(matrix1, matrix2);
-
-            System.out.println(
-                    "M1 (" + matrix1.length + "×" + matrix1[0].length + "): " + Arrays.deepToString(matrix1)
-            );
-
-            System.out.println(
-                    "M2 (" + matrix2.length + "×" + matrix2[0].length + "): " + Arrays.deepToString(matrix2)
-            );
-
-            System.out.println(
-                    "M1×M2 (" + result.length + "×" + result[0].length + "): " + Arrays.deepToString(result)
-            );
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
+        // Возвращаем истинное значение точки
+        visited[row][col] = 0;
+        return false;
     }
 }
 
@@ -197,64 +163,40 @@ public class Main {
     public static void main(String[] args) {
         System.out.println();
 
-        int[][] matrix = {
-                {1, 2, 3},
-                {4, 5, 6},
-                {7, 8, 9}
+        int[] data = {5, 12, 8, 15, 3, 10, 7};
+        DataVisualisation.histogram(data);
+        System.out.println();
+
+        int n = 10;
+        DataVisualisation.multiplicationTable(n);
+        System.out.println();
+
+        DataVisualisation.pairwiseDistanceMatrix();
+        System.out.println();
+
+        DataVisualisation.gradeHeatMap();
+        System.out.println();
+
+        int[][] maze = {
+                {1, 1, 1, 1, 1, 1, 1},
+                {1, 0, 0, 0, 1, 0, 1},
+                {1, 0, 1, 0, 1, 0, 1},
+                {1, 0, 1, 0, 0, 0, 1},
+                {1, 0, 1, 1, 1, 0, 1},
+                {1, 0, 0, 0, 0, 0, 1},
+                {1, 1, 1, 1, 1, 1, 1}
         };
-        Practice.rotateMatrix90DegreesClockwise(matrix);
+        MatrixPractice.labyrinth(maze);
         System.out.println();
 
-        Practice.findSumOnDiags(matrix);
-        System.out.println();
-
-        int[][] matrix1 = {
-                {1, 2, 3, 2},
-                {4, 2, 6, 2},
-                {7, 8, 2, 10}
+        int[][] maze1 = {
+                {1, 1, 1, 1, 1},
+                {1, 0, 0, 0, 1},
+                {1, 0, 1, 0, 1},
+                {1, 0, 0, 0, 1},
+                {1, 1, 1, 1, 1}
         };
-        int target = 2;
-        Practice.findCountOfOccurrences(matrix1, target);
-        System.out.println();
-
-        int n = 5;
-        Practice.createIdentityMatrix(n);
-        System.out.println();
-
-        int[][] table = {
-                {10, 20, 30},
-                {50, 5, 10},
-                {25, 25, 25}
-        };
-        Practice.findWithMaxSum(table);
-        System.out.println();
-
-        int[][][] parallelepiped = new int[3][4][5];
-        Practice.dimension3D(parallelepiped);
-        System.out.println();
-
-        int[][] A = {
-                {1, 2, 3},
-                {4, 5, 6}
-        };
-
-        int[][] B = {
-                {7, 8},
-                {9, 10},
-                {11, 12}
-        };
-
-        int[][] C = {
-                {13, 14}
-        };
-
-        Practice.showResultMatrix(A, B);
-        System.out.println();
-        Practice.showResultMatrix(B, A);
-        System.out.println();
-        Practice.showResultMatrix(A, C);
-        System.out.println();
-        Practice.showResultMatrix(C, A);
-        System.out.println();
+        MatrixPractice.labyrinth(maze1);
+        MatrixPractice.lightBFS(maze1);
     }
 }
