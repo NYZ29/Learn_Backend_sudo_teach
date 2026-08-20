@@ -180,6 +180,20 @@ class MatrixPractice {
             for (int[] visitRow : visit) {
                 System.out.println(Arrays.toString(visitRow));
             }
+            System.out.println();
+
+            for (int row = 0; row < maze.length; row++) {
+                for (int col = 0; col < maze[0].length; col++) {
+                    if (maze[row][col] == 1) {
+                        System.out.print("██");
+                    } else if (visit[row][col] == 1) {
+                        System.out.print("••");
+                    } else {
+                        System.out.print("  ");
+                    }
+                }
+                System.out.println();
+            }
         }
     }
 }
