@@ -33,15 +33,38 @@ class WorkWithArgs {
         }
     }
 
-    static void parseDouble(String[] args) {
+    static void parseDoubleLocal(String[] args) {
         if (args.length < 1) {
-            System.out.println("Передайте число!");
+            System.out.println("Передайте число! (LocalDouble)");
             return;
         }
 
-        double number = Double.parseDouble(args[0]);
-        System.out.println("Число: " + number);
-        System.out.println("Квадрат: " + (number * number));
+        try {
+            double number = Double.parseDouble(args[0]);
+            System.out.println("Число (LocalDouble): " + number);
+            System.out.println("Квадрат (LocalDouble): " + (number * number));
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка: число " + args[0] + " не является дробным. (LocalDouble)");
+        }
+    }
+
+    static double parseDoubleArg(String[] args) throws NumberFormatException {
+        if (args.length < 1) {
+            throw new IllegalArgumentException("Нет аргументов (DoubleArg)");
+        }
+        return Double.parseDouble(args[0]);
+    }
+
+    static double parseDoubleArgMine(String[] args) {
+        if (args.length < 1) {
+            throw new IllegalArgumentException("Нет аргументов (DoubleArgMine)");
+        }
+
+        try {
+            return Double.parseDouble(args[0]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Первый аргумент должен быть дробным числом (DoubleArgMine)", e);
+        }
     }
 }
 
@@ -73,7 +96,28 @@ public class Main {
         }
 
 
-        /*System.out.println();
-        WorkWithArgs.parseDouble(args);*/
+        System.out.println();
+        WorkWithArgs.parseDoubleLocal(args);
+
+        System.out.println();
+        try {
+            double number = WorkWithArgs.parseDoubleArg(args);
+            System.out.println("Число (DoubleArg): " + number);
+            System.out.println("Квадрат (DoubleArg): " + (number * number));
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка: первый аргумент должен быть дробным числом. (DoubleArg)");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: передайте хотя бы один аргумент. (DoubleArg)");
+        }
+        System.out.println("Программа продолжается...");
+
+        System.out.println();
+        try {
+            double number = WorkWithArgs.parseDoubleArgMine(args);
+            System.out.println("Число (DoubleArgMine): " + number);
+            System.out.println("Квадрат (DoubleArgMine): " + (number * number));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка ввода (DoubleArgMine): " + e.getMessage());
+        }
     }
 }
