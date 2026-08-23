@@ -1,28 +1,66 @@
 class WorkWithArgs {
     static int parseIntArg(String[] args) {
-        if (args.length < 1) {
-            throw new IllegalArgumentException("Нет аргументов");
-        }
+        ExceptionHandler.checkHasArgument(args, "parseIntArg");
         return Integer.parseInt(args[0]);
     }
 
     static double parseDoubleArg(String[] args) {
-        if (args.length < 1) {
-            throw new IllegalArgumentException("Нет аргументов");
-        }
+        ExceptionHandler.checkHasArgument(args, "parseDoubleArg");
         return Double.parseDouble(args[0]);
     }
 }
 
 
+class CheckNumberOfArguments {
+    static void greeting(String[] args) {
+        ExceptionHandler.checkHasArgument(args, "greeting");
+        if (!ExceptionHandler.isPureText(args[0])) {
+            throw new IllegalArgumentException("Имя должно содержать только буквы и пробелы: " + args[0]);
+        }
+
+        System.out.println("Привет, " + args[0] + "!");
+    }
+}
+
+
 class ExceptionHandler {
+    static void checkHasArgument(String[] args, String context) {
+        if (args.length < 1) {
+            throw new IllegalArgumentException("Нет аргументов: " + context);
+        }
+    }
+
+    static boolean isPureText(String s) {
+        if (s == null || s.isEmpty()) return false;
+        // ^[A-Za-zА-Яа-яЁё\s]+$ — только буквы и пробелы, без цифр
+        return s.matches("^[A-Za-zА-Яа-яЁё\\s]+$");
+    }
+
     static void handle(Exception e, String context) {
         if (e instanceof NumberFormatException) {
-            System.out.println("Ошибка формата числа: (" + context + "): не является целым числом.");
+            handleNumberFormatException(context);
         } else if (e instanceof IllegalArgumentException) {
-            System.out.println("Ошибка аргумента (" + context + "): " + e.getMessage());
+            handleIllegalArgumentException(e, context);
         } else {
             System.out.println("Неожиданная ошибка: (" + context + "): " + e.getMessage());
+        }
+    }
+
+    private static void handleNumberFormatException(String context) {
+        if ("parseIntArg".equals(context)) {
+            System.out.println("Ошибка формата числа: (" + context + "): значение не является целым числом.");
+        } else if ("parseDoubleArg".equals(context)) {
+            System.out.println("Ошибка формата числа: (" + context + "): значение не является числом.");
+        } else {
+            System.out.println("Ошибка формата числа (" + context + "): неверный числовой формат.");
+        }
+    }
+
+    private static void handleIllegalArgumentException(Exception e, String context) {
+        System.out.println("Ошибка аргумента (" + context + "): " + e.getMessage());
+        if ("greeting".equals(context)) {
+            System.out.println("Использование: java Greeting <имя>");
+            System.out.println("Пример: java Greeting Анна");
         }
     }
 }
@@ -48,6 +86,13 @@ public class Main {
             System.out.println("Квадрат: " + (number * number));
         } catch (IllegalArgumentException e) {
             ExceptionHandler.handle(e, "parseDoubleArg");
+        }
+        System.out.println();
+
+        try {
+            CheckNumberOfArguments.greeting(args);
+        } catch (IllegalArgumentException e) {
+            ExceptionHandler.handle(e, "greeting");
         }
     }
 }
