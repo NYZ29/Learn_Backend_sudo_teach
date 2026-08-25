@@ -1,67 +1,56 @@
 class WorkWithArgs {
-    static int parseIntArg(String[] args) {
-        ExceptionHandler.checkHasArgument(args, "parseIntArg");
+
+    static int parseInt(String[] args) {
+        ExceptionHandler.requireArguments(args, 1);
         return Integer.parseInt(args[0]);
     }
 
-    static double parseDoubleArg(String[] args) {
-        ExceptionHandler.checkHasArgument(args, "parseDoubleArg");
+    static double parseDouble(String[] args) {
+        ExceptionHandler.requireArguments(args, 1);
         return Double.parseDouble(args[0]);
     }
-}
 
-
-class CheckNumberOfArguments {
     static void greeting(String[] args) {
-        ExceptionHandler.checkHasArgument(args, "greeting");
-        if (!ExceptionHandler.isPureText(args[0])) {
-            throw new IllegalArgumentException("Имя должно содержать только буквы и пробелы: " + args[0]);
+        ExceptionHandler.requireArguments(args, 1);
+
+        if (!ExceptionHandler.isText(args[0])) {
+            throw new IllegalArgumentException("аргумент должен содержать только латинские и кириллические буквы");
         }
 
         System.out.println("Привет, " + args[0] + "!");
+    }
+
+    static void add(String[] args) {
+        ExceptionHandler.requireArguments(args, 2);
+
+        int a = Integer.parseInt(args[0]);
+        int b = Integer.parseInt(args[1]);
+        System.out.println(a + " + " + b + " = " + (a + b));
     }
 }
 
 
 class ExceptionHandler {
-    static void checkHasArgument(String[] args, String context) {
-        if (args.length < 1) {
-            throw new IllegalArgumentException("Нет аргументов: " + context);
+
+    static void requireArguments(String[] args, int expected) {
+        if (args.length != expected) {
+            throw new IllegalArgumentException(
+                    "ожидалось аргументов - "
+                            + expected
+                            + ", получено - "
+                            + args.length
+            );
         }
     }
 
-    static boolean isPureText(String s) {
-        if (s == null || s.isEmpty()) return false;
-        // ^[A-Za-zА-Яа-яЁё\s]+$ — только буквы и пробелы, без цифр
-        return s.matches("^[A-Za-zА-Яа-яЁё\\s]+$");
+    static boolean isText(String value) {
+        return value != null
+                && !value.isBlank()
+                && value.matches("[A-Za-zА-Яа-яЁё\\s]+");
     }
 
-    static void handle(Exception e, String context) {
-        if (e instanceof NumberFormatException) {
-            handleNumberFormatException(context);
-        } else if (e instanceof IllegalArgumentException) {
-            handleIllegalArgumentException(e, context);
-        } else {
-            System.out.println("Неожиданная ошибка: (" + context + "): " + e.getMessage());
-        }
-    }
-
-    private static void handleNumberFormatException(String context) {
-        if ("parseIntArg".equals(context)) {
-            System.out.println("Ошибка формата числа: (" + context + "): значение не является целым числом.");
-        } else if ("parseDoubleArg".equals(context)) {
-            System.out.println("Ошибка формата числа: (" + context + "): значение не является числом.");
-        } else {
-            System.out.println("Ошибка формата числа (" + context + "): неверный числовой формат.");
-        }
-    }
-
-    private static void handleIllegalArgumentException(Exception e, String context) {
-        System.out.println("Ошибка аргумента (" + context + "): " + e.getMessage());
-        if ("greeting".equals(context)) {
-            System.out.println("Использование: java Greeting <имя>");
-            System.out.println("Пример: java Greeting Анна");
-        }
+    static void print(String message) {
+        System.err.println("Ошибка: " + message);
     }
 }
 
@@ -70,29 +59,56 @@ public class Main {
     public static void main(String[] args) {
         System.out.println();
 
-        // int
-        try {
-            int number = WorkWithArgs.parseIntArg(args);
-            System.out.println("Вы передали число: " + number);
-            System.out.println("Удвоенное: " + (number * 2));
-        } catch (IllegalArgumentException e) {
-            ExceptionHandler.handle(e, "parseIntArg");
-        }
+        handleInt(args);
+        handleDouble(args);
+        handleGreeting(args);
+        handleAdd(args);
+    }
 
-        // double
+    private static void handleInt(String[] args) {
         try {
-            double number = WorkWithArgs.parseDoubleArg(args);
-            System.out.println("Число: " + number);
-            System.out.println("Квадрат: " + (number * number));
+            int number = WorkWithArgs.parseInt(args);
+
+            System.out.println("Вы передали число: " + number);
+            System.out.println("Удвоенное: " + number * 2);
+        } catch (NumberFormatException e) {
+            ExceptionHandler.print("int: аргумент не является целым числом");
         } catch (IllegalArgumentException e) {
-            ExceptionHandler.handle(e, "parseDoubleArg");
+            ExceptionHandler.print("int: " + e.getMessage());
         }
         System.out.println();
+    }
 
+    private static void handleDouble(String[] args) {
         try {
-            CheckNumberOfArguments.greeting(args);
+            double number = WorkWithArgs.parseDouble(args);
+
+            System.out.println("Число: " + number);
+            System.out.println("Квадрат: " + number * number);
+        } catch (NumberFormatException e) {
+            ExceptionHandler.print("double: аргумент не является числом");
         } catch (IllegalArgumentException e) {
-            ExceptionHandler.handle(e, "greeting");
+            ExceptionHandler.print("double: " + e.getMessage());
+        }
+        System.out.println();
+    }
+
+    private static void handleGreeting(String[] args) {
+        try {
+            WorkWithArgs.greeting(args);
+        } catch (IllegalArgumentException e) {
+            ExceptionHandler.print("greeting: " + e.getMessage());
+        }
+        System.out.println();
+    }
+
+    private static void handleAdd(String[] args) {
+        try {
+            WorkWithArgs.add(args);
+        } catch (NumberFormatException e) {
+            ExceptionHandler.print("add: оба аргумента должны быть целыми числами");
+        } catch (IllegalArgumentException e) {
+            ExceptionHandler.print("add: " + e.getMessage());
         }
     }
 }
