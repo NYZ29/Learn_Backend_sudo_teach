@@ -27,6 +27,17 @@ class WorkWithArgs {
         int b = Integer.parseInt(args[1]);
         System.out.println(a + " + " + b + " = " + (a + b));
     }
+
+    static void sum(String[] args) {
+        ExceptionHandler.requireAtLeastOneArgument(args);
+
+        int sum = 0;
+        for (String arg : args) {
+            sum += Integer.parseInt(arg);
+        }
+
+        System.out.println("Сумма: " + sum);
+    }
 }
 
 
@@ -39,6 +50,14 @@ class ExceptionHandler {
                             + expected
                             + ", получено - "
                             + args.length
+            );
+        }
+    }
+
+    static void requireAtLeastOneArgument(String[] args) {
+        if (args.length < 1) {
+            throw new IllegalArgumentException(
+                    "ожидался хотя бы 1 аргумент"
             );
         }
     }
@@ -63,6 +82,7 @@ public class Main {
         handleDouble(args);
         handleGreeting(args);
         handleAdd(args);
+        handleSum(args);
     }
 
     private static void handleInt(String[] args) {
@@ -110,5 +130,17 @@ public class Main {
         } catch (IllegalArgumentException e) {
             ExceptionHandler.print("add: " + e.getMessage());
         }
+        System.out.println();
+    }
+
+    private static void handleSum(String[] args) {
+        try {
+            WorkWithArgs.sum(args);
+        } catch (NumberFormatException e) {
+            ExceptionHandler.print("sum: все аргументы должны быть целыми числами");
+        } catch (IllegalArgumentException e) {
+            ExceptionHandler.print("sum: " + e.getMessage());
+        }
+        System.out.println();
     }
 }
