@@ -1,164 +1,132 @@
-class Parsing {
+class Patterns {
+    // Паттерн 1: Флаги и значения
+    // Многие командные утилиты используют флаги (опции) вида --flag значение или -f значение:
+    static void flagParser(String[] args) {
+        String host = "localhost";
+        int port = 8080;
+        boolean verbose = false;
 
-    // Подход 1: try-catch
-    static void safeParse(String[] args) {
-        for (String arg : args) {
-            try {
-                int number = Integer.parseInt(arg);
-                System.out.println(arg + " → " + number);
-            } catch (NumberFormatException e) {
-                System.out.println(arg + " → ошибка: не целое число!");
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "--host":
+                case "-h":
+                    if (i + 1 < args.length) host = args[++i];
+                    break;
+                case "--port":
+                case "-p":
+                    if (i + 1 < args.length) port = Integer.parseInt(args[++i]);
+                    break;
+                case "--verbose":
+                case "-v":
+                    verbose = true;
+                    break;
             }
         }
+
+        System.out.println("Хост: " + host);
+        System.out.println("Порт: " + port);
+        System.out.println("Подробный режим: " + verbose);
+    }
+    // Запуск: java FlagParser --host 192.168.1.1 --port 3000 --verbose
+
+    // Паттерн 2: Имя файла и опции
+    static void fileReader(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Использование: java FileReader <файл> [--lines|--words|--chars]");
+            return;
+        }
+
+        String filename = args[0];
+        String mode = args.length > 1 ? args[1] : "--lines";
+
+        System.out.println("Файл: " + filename);
+        System.out.println("Режим: " + mode);
+
+        // Здесь была бы реальная логика чтения файла
     }
 
-    // Подход 2: Проверка регулярным выражением
-    static void regexParse(String[] args) {
-        for (String arg : args) {
-            if (arg.matches("-?\\d+")) {
-                int number = Integer.parseInt(arg);
-                System.out.println(arg + " → " + number);
-            } else {
-                System.out.println(arg + " → не целое число!");
+    // Паттерн 3: Позиционные аргументы
+    static void deploy(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Использование: java Deploy <окружение> <версия> [флаги]");
+            System.out.println("Окружения: dev, staging, prod");
+            return;
+        }
+
+        String env = args[0];
+        String version = args[1];
+        boolean dryRun = false;
+
+        for (int i = 2; i < args.length; i++) {
+            if (args[i].equals("--dry-run")) {
+                dryRun = true;
             }
         }
+
+        System.out.println("Развёртывание: " + version + " на " + env);
+        if (dryRun) {
+            System.out.println("(Пробный запуск – ничего не меняем)");
+        }
     }
+    // Запуск: java Deploy prod 2.1.0 --dry-run
+
+    // Паттерн 4: Значения по умолчанию
+    static void webServer(String[] args) {
+        String host = "0.0.0.0";
+        int port = 80;
+        String root = "./public";
+
+        for (int i = 0; i < args.length; i += 2) {
+            if (i + 1 >= args.length) break;
+            switch (args[i]) {
+                case "--host":
+                    host = args[i + 1];
+                    break;
+                case "--port":
+                    port = Integer.parseInt(args[i + 1]);
+                    break;
+                case "--root":
+                    root = args[i + 1];
+                    break;
+            }
+        }
+
+        System.out.println("Сервер запускается на " + host + ":" + port);
+        System.out.println("Корневая директория: " + root);
+    }
+    // Запуск: java WebServer --port 3000
+    // Вывод: Сервер запускается на 0.0.0.0:3000
 }
 
 
-class ParseUtil {
-    static int parseInt(String s, int defaultValue) {
-        try {
-            return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-    }
-
-    static double parseDouble(String s, double defaultValue) {
-        try {
-            return Double.parseDouble(s);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-    }
-}
-
-
-class Practice {
-    static void currencyConverter(String[] args) {
-        if (args.length < 2) {
-            System.out.println("Использование: java CurrencyConverter <сумма> <курс>");
-            System.out.println("Пример: java CurrencyConverter 100 92.5");
-            return;
-        }
-
-        try {
-            double amount = Double.parseDouble(args[0]);
-            double rate = Double.parseDouble(args[1]);
-            double result = amount * rate;
-
-            System.out.printf("%.2f $ = %.2f ₽%n", amount, result);
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка: неверный формат числа!");
-        }
-    }
-
-    static void wordCounter(String[] args) {
-        if (args.length == 0) {
-            System.out.println("Передайте слова через пробел!");
-            return;
-        }
-
-        int totalChars = 0;
-        for (String word : args) {
-            totalChars += word.length();
-        }
-
-        System.out.println("Слов: " + args.length);
-        System.out.println("Символов: " + totalChars);
-        System.out.println("Средняя длина слова: " + (double) totalChars / args.length);
-    }
-
-    static void areaCalculator(String[] args) {
+class SafeFileReader {
+    static void safeFileReader(String[] args) {
         if (args.length < 1) {
-            System.out.println("Фигуры: circle, rectangle, triangle");
-            System.out.println("Использование: java AreaCalculator circle 5");
-            System.out.println("               java AreaCalculator rectangle 4 6");
-            System.out.println("               java AreaCalculator triangle 3 8");
+            System.out.println("Использование: java SafeFileReader <имя_файла>");
             return;
         }
 
-        String figure = args[0].toLowerCase();
+        String filename = args[0];
 
-        switch (figure) {
-            case "circle":
-                if (args.length < 2) { System.out.println("Нужен радиус!"); return; }
-                double r = Double.parseDouble(args[1]);
-                System.out.printf("Площадь круга: %.2f%n", Math.PI * r * r);
-                break;
-            case "rectangle":
-                if (args.length < 3) { System.out.println("Нужны длина и ширина!"); return; }
-                double l = Double.parseDouble(args[1]);
-                double w = Double.parseDouble(args[2]);
-                System.out.printf("Площадь прямоугольника: %.2f%n", l * w);
-                break;
-            case "triangle":
-                if (args.length < 3) { System.out.println("Нужны основание и высота!"); return; }
-                double base = Double.parseDouble(args[1]);
-                double height = Double.parseDouble(args[2]);
-                System.out.printf("Площадь треугольника: %.2f%n", base * height / 2.0);
-            default:
-                System.out.println("Неизвестная фигура: " + figure);
-        }
-    }
-
-    static void ageCheck(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Использование: java AgeCheck <возраст>");
+        // Проверка на path traversal
+        if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
+            System.out.println("Ошибка: недопустимое имя файла!");
             return;
         }
 
-        try {
-            int age = Integer.parseInt(args[0]);
-
-            if (age < 0) {
-                System.out.println("Возраст не может быть отрицательным!");
-            } else if (age < 14) {
-                System.out.println("Дети до 14 лет: " + age + " лет");
-            } else if (age < 18) {
-                System.out.println("Несовершеннолетние: " + age + " лет");
-            } else if (age < 65) {
-                System.out.println("Взрослые: " + age + " лет");
-            } else {
-                System.out.println("Пенсионеры: " + age + " лет");
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Введите целое число!");
-        }
-    }
-
-    static void caesarCipher(String[] args) {
-        if (args.length < 2) {
-            System.out.println("Использование: java CaesarCipher <текст> <сдвиг>");
+        // Проверка длины
+        if (filename.length() > 255) {
+            System.out.println("Ошибка: имя файла слишком длинное!");
             return;
         }
 
-        String text = args[0];
-        int shift = Integer.parseInt(args[1]);
-        StringBuilder result = new StringBuilder();
-
-        for (char c : text.toCharArray()) {
-            if (c >= 'A' && c <= 'Z') {
-                result.append((char) ('A' + (c - 'A' + shift) % 26));
-            } else if (c >= 'a' && c <= 'z') {
-                result.append((char) ('a' + (c - 'a' + shift) % 26));
-            } else {
-                result.append(c);
-            }
+        // Проверка на пустую строку
+        if (filename.trim().isEmpty()) {
+            System.out.println("Ошибка: имя файла не может быть пустым!");
+            return;
         }
 
-        System.out.println("Шифр: " + result.toString());
+        System.out.println("Чтение файла: " + filename);
     }
 }
 
@@ -166,32 +134,6 @@ class Practice {
 public class Main {
     public static void main(String[] args) {
         System.out.println();
-        Parsing.safeParse(args);
-
-        System.out.println();
-        Parsing.regexParse(args);
-
-        System.out.println();
-
-        int port = ParseUtil.parseInt(args.length > 0 ? args[0] : "", 8080);
-        double rate = ParseUtil.parseDouble(args.length > 0 ? args[0] : "", 1.0);
-
-        System.out.println("Порт: " + port);
-        System.out.println("Ставка: " + rate);
-
-        System.out.println();
-        Practice.currencyConverter(args);
-
-        System.out.println();
-        Practice.wordCounter(args);
-
-        System.out.println();
-        Practice.areaCalculator(args);
-
-        System.out.println();
-        Practice.ageCheck(args);
-
-        System.out.println();
-        Practice.caesarCipher(args);
+        SafeFileReader.safeFileReader(args);
     }
 }
