@@ -1,75 +1,110 @@
-class WorkWithArgs {
-
-    static int parseInt(String[] args) {
-        ExceptionHandler.requireArguments(args, 1);
-        return Integer.parseInt(args[0]);
-    }
-
-    static double parseDouble(String[] args) {
-        ExceptionHandler.requireArguments(args, 1);
-        return Double.parseDouble(args[0]);
-    }
-
-    static void greeting(String[] args) {
-        ExceptionHandler.requireArguments(args, 1);
-
-        if (!ExceptionHandler.isText(args[0])) {
-            throw new IllegalArgumentException("аргумент должен содержать только латинские и кириллические буквы");
+class Calculator {
+    static void calculator(String[] args) {
+        if (args.length != 3) {
+            System.out.println("Использование: java Calculator <число1> <операция> <число2>");
+            System.out.println("Операции: + - * /");
+            System.out.println("Пример: java Calculator 10 + 5");
         }
 
-        System.out.println("Привет, " + args[0] + "!");
-    }
-
-    static void add(String[] args) {
-        ExceptionHandler.requireArguments(args, 2);
-
-        int a = Integer.parseInt(args[0]);
-        int b = Integer.parseInt(args[1]);
-        System.out.println(a + " + " + b + " = " + (a + b));
-    }
-
-    static void sum(String[] args) {
-        ExceptionHandler.requireAtLeastOneArgument(args);
-
-        int sum = 0;
-        for (String arg : args) {
-            sum += Integer.parseInt(arg);
+        double a;
+        try {
+            a = Double.parseDouble(args[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка: '" + args[0] + "' не является числом!");
+            return;
         }
 
-        System.out.println("Сумма: " + sum);
+        String operation = args[1];
+
+        double b;
+        try {
+            b = Double.parseDouble(args[2]);
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка: '" + args[2] + "' не является числом!");
+            return;
+        }
+
+        double result;
+
+        switch (operation) {
+            case "+":
+                result = a + b;
+                break;
+            case "-":
+                result = a - b;
+                break;
+            case "*":
+                result = a * b;
+                break;
+            case "/":
+                if (b == 0) {
+                    System.out.println("Ошибка: деление на ноль!");
+                    return;
+                }
+                result = a / b;
+                break;
+            default:
+                System.out.println("Неизвестная операция: " + operation);
+                System.out.println("Доступные операции: + - * /");
+                return;
+        }
+
+        System.out.println(a + " " + operation + " " + b + " = " + result);
     }
 }
 
 
-class ExceptionHandler {
-
-    static void requireArguments(String[] args, int expected) {
-        if (args.length != expected) {
-            throw new IllegalArgumentException(
-                    "ожидалось аргументов - "
-                            + expected
-                            + ", получено - "
-                            + args.length
-            );
+class Practice {
+    static void hello(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Привет, незнакомец!");
+        } else if (args.length == 1) {
+            System.out.println("Привет, " + args[0] + "!");
+        } else {
+            System.out.print("Привет, " + args[0]);
+            for (int i = 0; i < args.length; i++) {
+                System.out.print(", " + args[i]);
+            }
+            System.out.println("!");
         }
     }
 
-    static void requireAtLeastOneArgument(String[] args) {
+    static void tempConverter(String[] args) {
         if (args.length < 1) {
-            throw new IllegalArgumentException(
-                    "ожидался хотя бы 1 аргумент"
-            );
+            System.out.println("Использование: java TempConverter <температура> [C|F]");
+            System.out.println("По умолчанию: Цельсий → Фаренгейт");
+            return;
+        }
+
+        double temp = Double.parseDouble(args[0]);
+        String unit = args.length > 1 ? args[1].toUpperCase() : "C";
+
+        if (unit.equals("C")) {
+            double f = temp * 9.0 / 5.0 + 32;
+            System.out.printf("%.1f°C = %.1f°F%n", temp, f);
+        } else if (unit.equals("F")) {
+            double c = (temp - 32) * 5.0 / 9.0;
+            System.out.printf("%.1f°F = %.1f°C%n", temp, c);
+        } else {
+            System.out.println("Неизвестная единица: " + unit);
         }
     }
 
-    static boolean isText(String value) {
-        return value != null
-                && !value.isBlank()
-                && value.matches("[A-Za-zА-Яа-яЁё\\s]+");
-    }
+    static void lightFind(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Исполльзование: java Find <слово> [текст]");
+            return;
+        }
 
-    static void print(String message) {
-        System.err.println("Ошибка: " + message);
+        String word = args[0];
+        String text = args.length > 1 ? args[1] : "Java – отличный язык программирования";
+
+        int index = text.indexOf(word);
+        if (index != -1) {
+            System.out.println("Слово '" + word + "' найдено на позиции " + index);
+        } else {
+            System.out.println("Слово '" + word + "' не найдено");
+        }
     }
 }
 
@@ -77,70 +112,6 @@ class ExceptionHandler {
 public class Main {
     public static void main(String[] args) {
         System.out.println();
-
-        handleInt(args);
-        handleDouble(args);
-        handleGreeting(args);
-        handleAdd(args);
-        handleSum(args);
-    }
-
-    private static void handleInt(String[] args) {
-        try {
-            int number = WorkWithArgs.parseInt(args);
-
-            System.out.println("Вы передали число: " + number);
-            System.out.println("Удвоенное: " + number * 2);
-        } catch (NumberFormatException e) {
-            ExceptionHandler.print("int: аргумент не является целым числом");
-        } catch (IllegalArgumentException e) {
-            ExceptionHandler.print("int: " + e.getMessage());
-        }
-        System.out.println();
-    }
-
-    private static void handleDouble(String[] args) {
-        try {
-            double number = WorkWithArgs.parseDouble(args);
-
-            System.out.println("Число: " + number);
-            System.out.println("Квадрат: " + number * number);
-        } catch (NumberFormatException e) {
-            ExceptionHandler.print("double: аргумент не является числом");
-        } catch (IllegalArgumentException e) {
-            ExceptionHandler.print("double: " + e.getMessage());
-        }
-        System.out.println();
-    }
-
-    private static void handleGreeting(String[] args) {
-        try {
-            WorkWithArgs.greeting(args);
-        } catch (IllegalArgumentException e) {
-            ExceptionHandler.print("greeting: " + e.getMessage());
-        }
-        System.out.println();
-    }
-
-    private static void handleAdd(String[] args) {
-        try {
-            WorkWithArgs.add(args);
-        } catch (NumberFormatException e) {
-            ExceptionHandler.print("add: оба аргумента должны быть целыми числами");
-        } catch (IllegalArgumentException e) {
-            ExceptionHandler.print("add: " + e.getMessage());
-        }
-        System.out.println();
-    }
-
-    private static void handleSum(String[] args) {
-        try {
-            WorkWithArgs.sum(args);
-        } catch (NumberFormatException e) {
-            ExceptionHandler.print("sum: все аргументы должны быть целыми числами");
-        } catch (IllegalArgumentException e) {
-            ExceptionHandler.print("sum: " + e.getMessage());
-        }
-        System.out.println();
+        Practice.lightFind(args);
     }
 }
