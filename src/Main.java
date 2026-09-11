@@ -1,63 +1,20 @@
-class Pizza {
-    private final String size;
-    private final boolean cheese;
-    private final boolean mushrooms;
-    private final boolean pepperoni;
-    private final boolean olives;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-    private Pizza(Builder builder) {
-        this.size = builder.size;
-        this.cheese = builder.cheese;
-        this.mushrooms = builder.mushrooms;
-        this.pepperoni = builder.pepperoni;
-        this.olives = builder.olives;
+class ListUtils {
+    static <T> List<T> filter(List<T> list, Condition<T> condition) {
+        List<T> result = new ArrayList<>();
+        for (T item : list) {
+            if (condition.check(item)) {
+                result.add(item);
+            }
+        }
+        return result;
     }
 
-    static class Builder {
-        private final String size;
-        private boolean cheese = false;
-        private boolean mushrooms = false;
-        private boolean pepperoni = false;
-        private boolean olives = false;
-
-        Builder(String size) {
-            this.size = size;
-        }
-
-        Builder cheese(boolean cheese) {
-            this.cheese = cheese;
-            return this;
-        }
-
-        Builder mushrooms(boolean mushrooms) {
-            this.mushrooms = mushrooms;
-            return this;
-        }
-
-        Builder pepperoni(boolean pepperoni) {
-            this.pepperoni = pepperoni;
-            return this;
-        }
-
-        Builder olives(boolean olives) {
-            this.olives = olives;
-            return this;
-        }
-
-        Pizza build() {
-            return new Pizza(this);
-        }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Пицца размера ").append(size);
-        if (cheese) sb.append(" с сыром");
-        if (mushrooms) sb.append(" с грибами");
-        if (pepperoni) sb.append(" с пепперони");
-        if (olives) sb.append(" с оливками");
-        return sb.toString();
+    interface Condition<T> {
+        boolean check(T item);
     }
 }
 
@@ -66,18 +23,10 @@ public class Main {
     public static void main(String[] args) {
         System.out.println();
 
-        Pizza pizza1 = new Pizza.Builder("Средняя")
-                .cheese(true)
-                .mushrooms(true)
-                .build();
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
-        Pizza pizza2 = new Pizza.Builder("Большая")
-                .cheese(true)
-                .pepperoni(true)
-                .olives(true)
-                .build();
+        List<Integer> evenNumbers = ListUtils.filter(numbers, item -> item % 2 == 0);
 
-        System.out.println(pizza1);
-        System.out.println(pizza2);
+        System.out.println("Чётные числа: " + evenNumbers);
     }
 }
